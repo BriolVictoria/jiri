@@ -1,0 +1,68 @@
+<?php
+
+use App\Models\Jiri;
+
+use function Pest\Laravel\post;
+
+it(
+    'redirects to the jiri index route after the successful creation of a jiri',
+    function () {
+        // Arrange
+        $jiri = Jiri::factory()->raw();
+
+        // Act
+        $response = post(route('jiris.store'), $jiri);   // ou post() mais importer la fonction
+
+        // Assert
+        $response->assertStatus(302); // redirection vers une autre page
+        $response->assertRedirect('/jiris');
+
+    }
+);
+
+it(
+    'display a complete list of jiris on the jiri index page',
+    function () {
+        // Arrange
+        $jiris = Jiri::factory(4)->create();
+
+        // Act
+        $response = $this->get('/jiris');
+
+        // Assert
+        $response->assertStatus(200);
+        $response->assertViewIs('jiris.index');
+        $response->assertSee('Listes des jiris');
+
+        foreach ($jiris as $jiri) {
+            $response->assertSee($jiri['name']);
+        }
+    }
+);
+
+it(
+    'verify if the link in jiri is the same of the jiri dashboard',
+    function () {
+        // Arrange
+        $jiri = Jiri::factory()->create();
+
+        // Act
+        $response = $this->get('/jiris/'.$jiri->id);
+
+        // Assert
+        $response->assertStatus(200);
+        $response->assertViewIs('jiris.show');
+        $response->assertSee('Récapitulatif du jiri : '.$jiri->name);
+    }
+);
+
+it('check the validation', function () {
+    $jiri = [
+        'name' => '',
+        'date' => \Carbon\Carbon::now(),
+    ];
+
+    $response = $this->post('/jiris', $jiri);
+
+    $response->assertInvalid('name');
+});

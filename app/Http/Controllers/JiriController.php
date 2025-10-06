@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Enums\ContactRoles;
+use App\Models\Attendance;
+use App\Models\Contact;
+use App\Models\Homework;
+use App\Models\Implementation;
+use App\Models\Jiri;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
+class JiriController extends Controller
+{
+    public function store(Request $request): RedirectResponse
+    {
+        $validated_data = $request->validate([
+            'name' => 'required',
+            'date' => 'required|date',
+            'description' => 'nullable',
+            'contacts.*' => 'nullable|array',
+            'projects.*' => 'nullable',
+        ]);
+
+
+        $jiri = Jiri::create($validated_data);
+
+        if (!empty($validated_data['projects'])) {
+            $jiri->projects()->attach($validated_data['projects']);
+        }
+
+        if (!empty($validated_data['contacts'])) {
+            foreach ($validated_data['contacts'] as $key => $contact) {
+                $jiri->contacts()->attach($key, ['role' => $contact['role']]);
+
+                if ($contact['role'] === ContactRoles::Evaluated->value) {
+                    $homeworks = Homework::where('jiri_id' , '=', $jiri->id)->pluck('id')->toArray();
+                    $correct_contact = Contact::where('contacts.id', '=', $key)->first();
+
+                    $correct_contact->homeworks()->attach($homeworks);
+                }
+            }
+        }
+
+
+
+        return redirect(route('jiris.index'));
+    }
+
+    public function index()
+    {
+        $jiris = Jiri::all();
+
+        return view('jiris.index', compact('jiris'));
+    }
+
+    public function show(Jiri $jiri)
+    {
+        return view('jiris.show', compact('jiri'));
+    }
+
+    public function create()
+    {
+        return view('jiris.create');
+    }
+}
