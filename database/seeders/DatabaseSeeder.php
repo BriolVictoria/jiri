@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Contact;
 use App\Models\Jiri;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Auth;
 use function Laravel\Prompts\password;
 
 class DatabaseSeeder extends Seeder
@@ -15,12 +17,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
 
         User::factory()->create([
             'name' => 'Ambre Briol',
@@ -28,16 +24,10 @@ class DatabaseSeeder extends Seeder
             'password' => password_hash('123456789', PASSWORD_BCRYPT),
         ]);
 
-        Jiri::factory()->create([
-            'name' => 'Toon Van Den Bos',
-        ]);
+        User::factory(10)->create();
+        Jiri::factory(10)->create();
+        Jiri::factory()->create()->where('jiris.user_id' === 1);
 
-        Jiri::factory()->create([
-            'name' => 'Dylan Jacquet',
-        ]);
-
-        Jiri::factory()->create([
-            'name' => 'Lorian Flamant',
-        ]);
+        Contact::factory(10)->create();
     }
 }

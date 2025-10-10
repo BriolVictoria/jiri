@@ -94,7 +94,8 @@ it(
     }
 );
 
-it('verifies if the jiris.edit exist and if she has a form',
+it(
+    'verifies if the jiris.edit exist and if she has a form',
     function () {
         $user = User::factory()->create();
 

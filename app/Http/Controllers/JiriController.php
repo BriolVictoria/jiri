@@ -51,6 +51,8 @@ class JiriController extends Controller
     {
         $jiris = Auth::user()->jiris;
 
+        $contacts = Contact::all();
+
         return view('jiris.index', compact('jiris'));
     }
 

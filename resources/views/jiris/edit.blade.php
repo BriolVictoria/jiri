@@ -45,10 +45,7 @@
             <div class="border-b-1 m-2 p-2">
                 <input  value="1" type="checkbox" name="contacts[1]" id="JP">
                 <label for="JP">
-                    Jean-Paul
-                    {{-- @foreach()
-                         --}}{{--Récuperer les contacts--}}{{--
-                     @endforeach--}}
+                    {{ $contact }}
                 </label>
                 <select name="contacts[1][role]" class="font-bold mx-5 border-1 rounded-xl p-1  my-1">
                     <option value="evaluated" id="role2" class="m-1">Evalué</option>
@@ -56,7 +53,7 @@
                 </select>
             </div>
 
-            <div class="border-b-1 m-2 p-2">
+            {{--<div class="border-b-1 m-2 p-2">
                 <input  value="2" type="checkbox" name="contacts[2]" id="JM">
                 <label for="JM">
                     Jean-Michel
@@ -90,7 +87,7 @@
                     <option value="evaluated" id="role2" class="m-1">Evalué</option>
                     <option value="evaluator"  id="role3">Evaluateur</option>
                 </select>
-            </div>
+            </div>--}}
         </div>
     </fieldset>
 
