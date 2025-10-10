@@ -72,11 +72,11 @@ it(
     function () {
         //Arrange
         $user = User::factory()
-            ->has(Jiri::factory()->count(3))
+            ->hasJiris(3)
             ->create();
 
         $other_user = User::factory()
-            ->has(Jiri::factory()->count(4))
+            ->hasJiris(4)
             ->create();
 
         actingAs($user);
@@ -84,13 +84,9 @@ it(
         //Act
         $response = $this->get(route('jiris.index'));
 
-        foreach ($user->jiris as $jiri) {
-            $response->assertSee($jiri->name);
-        }
+        $response->assertSee($user->jiris->pluck('name')->toArray());
+        $response->assertDontSee($other_user->jiris->pluck('name')->toArray());
 
-        foreach ($other_user->jiris as $jiri) {
-            $response->assertDontSee($jiri->name);
-        }
     }
 );
 

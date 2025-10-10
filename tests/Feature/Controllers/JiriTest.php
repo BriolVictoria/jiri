@@ -122,12 +122,14 @@ it(
     'verify if the link in jiri is the same of the jiri dashboard',
     function () {
         // Arrange
-        $jiri = Jiri::factory()->create();
         $user = User::factory()->create();
         actingAs($user);
+        $jiri = Jiri::factory()
+            ->for($user)
+            ->create();
 
         // Act
-        $response = $this->get('/jiris/' . $jiri->id);
+        $response = $this->get(route('jiris.show', ['jiri' => $jiri->id]));
 
         // Assert
         $response->assertStatus(200);
