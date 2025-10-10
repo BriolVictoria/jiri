@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Jiri;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -25,6 +26,18 @@ class DatabaseSeeder extends Seeder
             'name' => 'Ambre Briol',
             'email' => 'ambre.briol@gmail.com',
             'password' => password_hash('123456789', PASSWORD_BCRYPT),
+        ]);
+
+        Jiri::factory()->create([
+            'name' => 'Toon Van Den Bos',
+        ]);
+
+        Jiri::factory()->create([
+            'name' => 'Dylan Jacquet',
+        ]);
+
+        Jiri::factory()->create([
+            'name' => 'Lorian Flamant',
         ]);
     }
 }

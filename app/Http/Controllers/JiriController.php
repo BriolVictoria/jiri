@@ -63,4 +63,9 @@ class JiriController extends Controller
     {
         return view('jiris.create');
     }
+
+    public function edit(Jiri $jiri)
+    {
+        return view('jiris.edit', compact('jiri'));
+    }
 }
