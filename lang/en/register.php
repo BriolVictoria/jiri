@@ -8,4 +8,6 @@ return [
     'email' => 'Email',
     'password' => 'Password',
     'button_register' => 'Create the account',
+    'already_an_account' => 'Already an account ?',
+    'identify_yourself' => 'Identify yourself',
 ];

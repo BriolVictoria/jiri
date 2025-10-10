@@ -7,5 +7,6 @@ return [
     'email' => 'Email',
     'password' => 'Mot de passe',
     'button_register' => 'Créer le compte',
-
+    'already_an_account' => 'Déjà un compte ?',
+    'identify_yourself' => 'Identifiez-vous',
 ];

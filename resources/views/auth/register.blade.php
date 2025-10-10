@@ -59,6 +59,11 @@
                 <button class="bg-blue-500 text-white p-2 rounded-sm mt-5 w-1/1 hover:bg-sky-700"
                         type="submit">{{__('register.button_register')}}</button>
             </div>
+
+            <div class="flex mt-5">
+                <p class="text-xs ">{{ __('register.already_an_account')}}<a class="text-blue-500 ml-3" href="{{ route('login') }}">{{ __('register.identify_yourself')}}</a></p>
+
+            </div>
         </fieldset>
 
     </form>

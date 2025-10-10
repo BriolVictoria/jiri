@@ -60,7 +60,7 @@
             </div>
 
             <div class="flex mt-5">
-                <p class="text-xs ">{{ __('login.no_account_yet')}}<a class="text-blue-500 ml-3" href="/register">{{ __('login.create_an_account')}}</a></p>
+                <p class="text-xs ">{{ __('login.no_account_yet')}}<a class="text-blue-500 ml-3" href="{{ route('register') }}">{{ __('login.create_an_account')}}</a></p>
 
             </div>
 
