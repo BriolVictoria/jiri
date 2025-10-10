@@ -7,14 +7,19 @@ use App\Models\Homework;
 use App\Models\Implementation;
 use App\Models\Jiri;
 use App\Models\Project;
-use function Pest\Laravel\get;
+use App\Models\User;
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\post;
 
 it(
     'create successfully a jiri from the data provided by the request',
     function () {
         // Arrange
+        $user = User::factory()->create();
+        actingAs($user);
+
         $jiri = Jiri::factory()->raw();
+
 
         // Act
         $response = $this->post('/jiris', $jiri);    // ou post() mais importer la fonction
@@ -28,6 +33,8 @@ it(
 it(
     'fails to create a new jiri in database when the name is missing in the request',
     function () {
+        $user = User::factory()->create();
+        actingAs($user);
 
         $jiri = Jiri::factory()
             ->withoutName()
@@ -46,6 +53,8 @@ it(
 it(
     'fails to create a new jiri in database when the date is missing in the request',
     function () {
+        $user = User::factory()->create();
+        actingAs($user);
 
         $jiri = Jiri::factory()
             ->withoutDate()
@@ -64,6 +73,8 @@ it(
 it(
     'fails to create a new jiri in database when the date has the wrong format in the request',
     function () {
+        $user = User::factory()->create();
+        actingAs($user);
 
         $jiri = Jiri::factory()
             ->withInvalidDate()
@@ -82,6 +93,9 @@ it(
 it(
     'display a complete list of jiris on the jiri index page',
     function () {
+        $user = User::factory()->create();
+        actingAs($user);
+
         // Arrange
         $jiris = Jiri::factory(4)->create();
 
@@ -102,6 +116,9 @@ it(
 it(
     'verify if the link in jiri is the same of the jiri dashboard',
     function () {
+        $user = User::factory()->create();
+        actingAs($user);
+
         // Arrange
         $jiri = Jiri::factory()->create();
 
@@ -118,6 +135,9 @@ it(
 it(
     'verifies if jiri data is correctly inserted in the DB when you create a Jiri with projects',
     function () {
+        $user = User::factory()->create();
+        actingAs($user);
+
         $jiri = Jiri::factory()->raw();
 
         $projects = Project::factory()
@@ -151,6 +171,8 @@ it(
 it(
     'verifies if jiri data is correctly inserted in the DB when you create a Jiri with contacts',
     function () {
+        $user = User::factory()->create();
+        actingAs($user);
 
         $jiri = Jiri::factory()->raw();
 
@@ -185,6 +207,8 @@ it(
 it(
     'verifies if jiri data is correctly inserted in the DB when you create a Jiri with contacts and projects',
     function () {
+        $user = User::factory()->create();
+        actingAs($user);
 
         $jiri = Jiri::factory()->raw();
 

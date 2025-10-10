@@ -4,10 +4,15 @@ use App\Enums\ContactRoles;
 use App\Models\Contact;
 use App\Models\Jiri;
 use App\Models\Project;
+use App\Models\User;
+use function Pest\Laravel\actingAs;
 
 it(
     'is possible to retrieve many evaluated/evaluators from a Jiri',
     function () {
+        $user = User::factory()->create();
+        actingAs($user);
+
         $jiri = Jiri::factory()
             ->hasAttached(
                 Contact::factory()->count(7),
@@ -30,6 +35,9 @@ it(
 it(
     'is possible retrieve many project from a Jiri',
     function () {
+        $user = User::factory()->create();
+        actingAs($user);
+
         $jiri = Jiri::factory()
             ->hasAttached(
                 Project::factory()->count(3),
@@ -44,6 +52,9 @@ it(
 it(
     'is possible retrieve many implementation from an evaluated attending a Jiri',
     function () {
+        $user = User::factory()->create();
+        actingAs($user);
+
         $jiri = Jiri::factory()
             ->hasAttached(
                 Contact::factory()->count(1),

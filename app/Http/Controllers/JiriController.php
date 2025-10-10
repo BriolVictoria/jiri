@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ContactRoles;
-use App\Models\Attendance;
 use App\Models\Contact;
 use App\Models\Homework;
-use App\Models\Implementation;
 use App\Models\Jiri;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,7 +23,7 @@ class JiriController extends Controller
         ]);
 
 
-        $jiri = Jiri::create($validated_data);
+        $jiri = Jiri::create(array_merge($validated_data, ['user_id' => \Auth::user()->id]));
 
         if (!empty($validated_data['projects'])) {
             $jiri->projects()->attach($validated_data['projects']);

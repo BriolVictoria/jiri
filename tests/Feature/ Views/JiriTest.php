@@ -1,10 +1,16 @@
 <?php
 
+use App\Models\User;
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
 it(
     'verifies that the jiris.create route displays a form to create a jiri',
+
     function (string $locale, string $main_heading) {
+        $user = User::factory()->create();
+        actingAs($user);
+
         App::setLocale($locale);
 
         $response = get(route('jiris.create'));
