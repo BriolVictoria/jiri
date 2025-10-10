@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Contact;
 use App\Models\Jiri;
+use App\Models\Project;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -21,7 +22,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Ambre Briol',
             'email' => 'ambre.briol@gmail.com',
-            'password' => password_hash('123456789', PASSWORD_BCRYPT),
+            'password' => password_hash('123', PASSWORD_BCRYPT),
         ]);
 
         User::factory(10)->create();
@@ -29,5 +30,7 @@ class DatabaseSeeder extends Seeder
         Jiri::factory()->create()->where('jiris.user_id' === 1);
 
         Contact::factory(10)->create();
+
+        Project::factory(10)->create();
     }
 }
