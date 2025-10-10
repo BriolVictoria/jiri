@@ -70,6 +70,7 @@ it(
 it(
     'check the validation',
     function () {
+        //Arrange
         $user = User::factory()->create();
         actingAs($user);
 
@@ -78,8 +79,10 @@ it(
             'date' => \Carbon\Carbon::now(),
         ];
 
+        //Act
         $response = $this->post('/jiris', $jiri);
 
+        //Assert
         $response->assertInvalid('name');
     }
 );

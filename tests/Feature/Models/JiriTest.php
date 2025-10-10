@@ -10,6 +10,7 @@ use function Pest\Laravel\actingAs;
 it(
     'is possible to retrieve many evaluated/evaluators from a Jiri',
     function () {
+        //Arrange
         $user = User::factory()->create();
         actingAs($user);
 
@@ -24,6 +25,7 @@ it(
             )
             ->create();
 
+        //Assert
         $this->assertDatabaseCount('attendances', 10);
         expect($jiri->evaluators->count())->toBe(3) //attendons nous que le compte des évaluateurs du jiri soit 3
         ->and($jiri->evaluated->count())->toBe(7)
@@ -35,6 +37,7 @@ it(
 it(
     'is possible retrieve many project from a Jiri',
     function () {
+        //Arrange
         $user = User::factory()->create();
         actingAs($user);
 
@@ -44,6 +47,7 @@ it(
             )
             ->create();
 
+        //Assert
         $this->assertDatabaseCount('homeworks', 3);
         expect($jiri->projects->count())->toBe(3);
     }
@@ -52,6 +56,7 @@ it(
 it(
     'is possible retrieve many implementation from an evaluated attending a Jiri',
     function () {
+        //Arrange
         $user = User::factory()->create();
         actingAs($user);
 
@@ -73,6 +78,7 @@ it(
             $contact->homeworks()->attach($homework);
         }
 
+        //Assert
        $this->assertDatabaseCount('implementations', 3);
         expect($jiri->homeworks()->count())->toBe(3)
             ->and($contact->implementations->count())->toBe(3)

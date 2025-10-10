@@ -20,7 +20,6 @@ it(
 
         $jiri = Jiri::factory()->raw();
 
-
         // Act
         $response = $this->post('/jiris', $jiri);    // ou post() mais importer la fonction
 
@@ -33,6 +32,7 @@ it(
 it(
     'fails to create a new jiri in database when the name is missing in the request',
     function () {
+        //Arrange
         $user = User::factory()->create();
         actingAs($user);
 
@@ -40,11 +40,12 @@ it(
             ->withoutName()
             ->raw();
 
+        //Act
         $response = post(route('jiris.store'), $jiri);
         //expect($response)->toThrow(\Illuminate\Database\QueryException::class);
 
+        //Assert
         $response->assertInvalid('name');
-
         \Pest\Laravel\assertDatabaseEmpty('jiris');
 
     }
@@ -53,6 +54,7 @@ it(
 it(
     'fails to create a new jiri in database when the date is missing in the request',
     function () {
+        //Arrange
         $user = User::factory()->create();
         actingAs($user);
 
@@ -60,11 +62,12 @@ it(
             ->withoutDate()
             ->raw();
 
+        //Act
         $response = post(route('jiris.store'), $jiri);
         //expect($response)->toThrow(\Illuminate\Database\QueryException::class);
 
+        //Assert
         $response->assertInvalid('date');
-
         \Pest\Laravel\assertDatabaseEmpty('jiris');
 
     }
@@ -73,6 +76,7 @@ it(
 it(
     'fails to create a new jiri in database when the date has the wrong format in the request',
     function () {
+        //Arrange
         $user = User::factory()->create();
         actingAs($user);
 
@@ -80,11 +84,12 @@ it(
             ->withInvalidDate()
             ->raw();
 
+        //Act
         $response = post(route('jiris.store'), $jiri);
         //expect($response)->toThrow(\Illuminate\Database\QueryException::class);
 
+        //Assert
         $response->assertInvalid('date');
-
         \Pest\Laravel\assertDatabaseEmpty('jiris');
 
     }
@@ -93,10 +98,10 @@ it(
 it(
     'display a complete list of jiris on the jiri index page',
     function () {
+        // Arrange
         $user = User::factory()->create();
         actingAs($user);
 
-        // Arrange
         $jiris = Jiri::factory(4)->create();
 
         // Act
@@ -116,11 +121,10 @@ it(
 it(
     'verify if the link in jiri is the same of the jiri dashboard',
     function () {
-        $user = User::factory()->create();
-        actingAs($user);
-
         // Arrange
         $jiri = Jiri::factory()->create();
+        $user = User::factory()->create();
+        actingAs($user);
 
         // Act
         $response = $this->get('/jiris/' . $jiri->id);
@@ -135,6 +139,7 @@ it(
 it(
     'verifies if jiri data is correctly inserted in the DB when you create a Jiri with projects',
     function () {
+        //Arrange
         $user = User::factory()->create();
         actingAs($user);
 
@@ -156,7 +161,10 @@ it(
             ]
         );
 
+        //Act
         $response = $this->post(route('jiris.store'), $form_data);
+
+        //Assert
         $response->assertStatus(302); //status de redirection
 
         /*\Pest\Laravel\assertDatabaseCount('jiri', '1'); // pareil que celui en dessous*/
@@ -171,6 +179,7 @@ it(
 it(
     'verifies if jiri data is correctly inserted in the DB when you create a Jiri with contacts',
     function () {
+        //Arrange
         $user = User::factory()->create();
         actingAs($user);
 
@@ -195,8 +204,10 @@ it(
             $form_data['contacts'][$key] = ['role' => $available_roles[random_int(1, 2)]];
         }
 
+        //Act
         $response = $this->post(route('jiris.store'), $form_data);
 
+        //Assert
         $response->assertStatus(302);
         expect(Jiri::all()->count())->toBe(1)
             ->and(Contact::all()->count())->toBe(4)
@@ -207,6 +218,7 @@ it(
 it(
     'verifies if jiri data is correctly inserted in the DB when you create a Jiri with contacts and projects',
     function () {
+        //Arrange
         $user = User::factory()->create();
         actingAs($user);
 
@@ -239,8 +251,10 @@ it(
             $form_data['contacts'][$key] = ['role' => $available_roles[random_int(1, 2)]];
         }
 
-
+        //Act
         $response = $this->post(route('jiris.store'), $form_data);
+
+        //Assert
         $response->assertStatus(302);
 
         expect(Jiri::all()->count())->toBe(1)

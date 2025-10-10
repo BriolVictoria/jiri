@@ -60,14 +60,16 @@ it(
 it(
     'check the validation',
     function () {
-
+        //Arrange
         $contact = [
             'name' => '',
             'email' => '',
         ];
 
+        //Act
         $response = $this->post('/contacts', $contact);
 
+        //Assert
         $response->assertInvalid('name');
 
     });

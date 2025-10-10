@@ -46,24 +46,26 @@ it(
         $project = Project::factory()->create();
 
         // Act
-        $response = $this->get('/projects/'.$project->id);
+        $response = $this->get('/projects/' . $project->id);
 
         // Assert
         $response->assertStatus(200);
         $response->assertViewIs('projects.show');
-        $response->assertSee('Récapitulatif des projects : '.$project->name);
+        $response->assertSee('Récapitulatif des projects : ' . $project->name);
 
     });
 
 it(
     'check the validation',
     function () {
-
+        //Arrange
         $project = [
             'name' => '',
         ];
 
+        //Act
         $response = $this->post('/projects', $project);
 
+        //Assert
         $response->assertInvalid('name');
     });
