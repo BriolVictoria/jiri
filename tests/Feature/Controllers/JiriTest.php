@@ -182,7 +182,8 @@ it(
     }
 );
 
-it('verifies if jiri data is correctly inserted in the DB when you create a Jiri with contacts and projects',
+it(
+    'verifies if jiri data is correctly inserted in the DB when you create a Jiri with contacts and projects',
     function () {
 
         $jiri = Jiri::factory()->raw();

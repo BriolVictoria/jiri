@@ -12,7 +12,7 @@ Route::get('/', function () {
 /*Route::get('/jiris', [JiriController::class, 'index'])->name('jiris.index');
 Route::post('/jiris', [JiriController::class, 'store']);
 Route::get('/jiris/{jiri}', [JiriController::class, 'show']);*/
-Route::resource('jiris', JiriController::class);
+Route::resource('jiris', JiriController::class)/*->middleware('auth')*/;
 
 Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
 Route::post('/contacts', [ContactController::class, 'store']);

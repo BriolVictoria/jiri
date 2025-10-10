@@ -10,6 +10,7 @@ use App\Models\Implementation;
 use App\Models\Jiri;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JiriController extends Controller
 {
@@ -50,7 +51,7 @@ class JiriController extends Controller
 
     public function index()
     {
-        $jiris = Jiri::all();
+        $jiris = Auth::user()->jiris;
 
         return view('jiris.index', compact('jiris'));
     }
