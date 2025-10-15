@@ -3,20 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class ContactController extends Controller
 {
-    public function store()
+    public function store(Request $request)
     {
 
         $validatedData = request()->validate([
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required|email',
+            'avatar' => 'nullable|image'
         ]);
 
-        Contact::create(request()->all());
+        if ($request->hasFile('avatar')) {
+            $path = Storage::disk('public')->putFile('contacts', $request->file('avatar'));
+            //$file_name = uniqid('contact_') . '.jpg';
+            //$path = "contact/$file_name";
+            $validatedData['avatar'] = $path;  // A FAIRE
+        }
 
-        return redirect(route('contacts.index'));
+        $contact = auth()->user()->contacts()->create($validatedData);
+
+        return redirect(route('contacts.show', compact('contact')));
     }
 
     public function index()
@@ -29,5 +40,15 @@ class ContactController extends Controller
     public function show(Contact $contact)
     {
         return view('contacts.show', compact('contact'));
+    }
+
+    public function create()
+    {
+        return view('contacts.create');
+    }
+
+    public function edit(Contact $contact)
+    {
+        return view('contacts.edit', compact('contact'));
     }
 }

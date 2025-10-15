@@ -4,7 +4,6 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\JiriController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
-echo storage_path();
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,9 +14,11 @@ Route::post('/jiris', [JiriController::class, 'store']);
 Route::get('/jiris/{jiri}', [JiriController::class, 'show']);*/
 Route::resource('jiris', JiriController::class)->middleware('auth');
 
-Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
+/*Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
 Route::post('/contacts', [ContactController::class, 'store']);
-Route::get('/contacts/{contact}', [ContactController::class, 'show']);
+Route::get('/contacts/{contact}', [ContactController::class, 'show']);*/
+Route::resource('contacts', ContactController::class);
+
 
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
 Route::post('/projects', [ProjectController::class, 'store']);

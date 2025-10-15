@@ -12,7 +12,7 @@ class Contact extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'email'];
+    protected $fillable = ['name', 'email', 'avatar'];
 
     public function homeworks():BelongsToMany
     {
@@ -22,5 +22,10 @@ class Contact extends Model
     public function implementations():HasMany
     {
         return $this->hasMany(Implementation::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

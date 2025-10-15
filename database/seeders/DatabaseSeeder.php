@@ -19,17 +19,19 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Ambre Briol',
             'email' => 'ambre.briol@gmail.com',
             'password' => password_hash('123', PASSWORD_BCRYPT),
         ]);
 
-        User::factory(10)->create();
-        Jiri::factory(10)->create();
-        Jiri::factory()->create()->where('jiris.user_id' === 1);
+        Jiri::factory(10)
+            ->for($user)
+            ->create();
 
-        Contact::factory(10)->create();
+        Contact::factory(10)
+            ->for($user)
+            ->create();
 
         Project::factory(10)->create();
     }

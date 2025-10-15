@@ -16,21 +16,21 @@
         <div class="flex flex-col relative">
             <label for="name">Nom <small class="text-red-600 ml-1">*</small></label>
             @error('name')
-            <p>{!! $message !!}</p>
+            <p class="error text-red-600 text-xs">{!! $message !!}</p>
             @enderror
             <input type="text" name="name" id="name" value="{{ old('name') }}" class="border p-2 rounded-lg" placeholder="Design Web">
         </div>
         <div class="flex flex-col relative my-3">
             <label for="date">Date <small class="text-red-600 ml-1">*</small></label>
             @error('date')
-            <p>{!! $message !!}</p>
+            <p class="error text-red-600 text-xs">{!! $message !!}</p>
             @enderror
             <input type="text" name="date" id="date" value="{{ old('name') }}" class="border p-2 rounded-lg">
         </div>
         <div class="flex flex-col relative">
             <label for="description">Description</label>
             @error('description')
-            <p>{!! $message !!}</p>
+            <p class="error text-red-600 text-xs">{!! $message !!}</p>
             @enderror
             <textarea name="description" id="description" cols="30" rows="5" {{--value="{{ old('name') }}"--}} class="border p-2 rounded-lg" placeholder="Jury des élèves de B2..."></textarea>
         </div>

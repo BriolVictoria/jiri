@@ -17,7 +17,7 @@
     <fieldset class="border-1 p-4  my-10 rounded-lg">
         <legend class="text-2xl p-2">Informations général</legend>
         <div class="flex flex-col relative">
-            <label for="name">Nom <small class="text-red-600 ml-1">*</small></label>
+            <label class="font-bold" for="name">Nom <small class="text-red-600 ml-1">*</small></label>
             @error('name')
             <p>{!! $message !!}</p>
             @enderror
@@ -25,14 +25,14 @@
                    placeholder="Design Web">
         </div>
         <div class="flex flex-col relative my-3">
-            <label for="date">Date <small class="text-red-600 ml-1">*</small></label>
+            <label class="font-bold" for="date">Date <small class="text-red-600 ml-1">*</small></label>
             @error('date')
             <p>{!! $message !!}</p>
             @enderror
             <input type="text" name="date" id="date" value="{{ $jiri->date }}" class="border p-2 rounded-lg">
         </div>
         <div class="flex flex-col relative">
-            <label for="description">Description</label>
+            <label class="font-bold" for="description">Description</label>
             @error('description')
             <p>{!! $message !!}</p>
             @enderror

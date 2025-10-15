@@ -59,7 +59,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         RedirectIfAuthenticated::redirectUsing(function () {
-            return response('jiri.index');
+            return route('jiris.index');
         });
 
     }
