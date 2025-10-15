@@ -102,7 +102,7 @@ it(
         $user = User::factory()->create();
         actingAs($user);
 
-        $jiris = Jiri::factory(4)->create();
+        $jiris = Jiri::factory(4)->for($user)->create();
 
         // Act
         $response = $this->get('/jiris');

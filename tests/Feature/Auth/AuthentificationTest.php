@@ -95,7 +95,7 @@ it(
     function () {
         $user = User::factory()->create();
 
-        $jiri = Jiri::factory()->create();
+        $jiri = Jiri::factory()->for($user)->create();
 
         actingAs($user);
 

@@ -10,7 +10,8 @@
 <body>
 <h1 class="font-bold text-3xl my-5 text-center">{{ __('edit-view.modify_the_jiri') }}</h1>
 
-<form action="{!! route('jiris.store') !!}" method="post" class="max-w-1/2 mx-auto">
+<form action="{!! route('jiris.update', $jiri->id) !!}" method="post" class="max-w-1/2 mx-auto">
+    @method('PATCH')
     @csrf
     <p class="text-red-600 text-xs mb-3 text-center">{{ __('login.fields_are_required') }}</p>
     <fieldset class="border-1 p-4  my-10 rounded-lg">

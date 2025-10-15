@@ -32,7 +32,9 @@ it(
         $user = User::factory()->create();
         actingAs($user);
 
-        $jiris = Jiri::factory(4)->create();
+        $jiris = Jiri::factory(4)
+            ->for($user)
+            ->create();
 
         // Act
         $response = $this->get('/jiris');
@@ -55,7 +57,9 @@ it(
         $user = User::factory()->create();
         actingAs($user);
 
-        $jiri = Jiri::factory()->create();
+        $jiri = Jiri::factory()
+            ->for($user)
+            ->create();
 
         // Act
         $response = $this->get('/jiris/' . $jiri->id);
@@ -74,10 +78,10 @@ it(
         $user = User::factory()->create();
         actingAs($user);
 
-        $jiri = [
+        $jiri = Jiri::factory()->make([
             'name' => '',
             'date' => \Carbon\Carbon::now(),
-        ];
+        ])->toArray();
 
         //Act
         $response = $this->post('/jiris', $jiri);

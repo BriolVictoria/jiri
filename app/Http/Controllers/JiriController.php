@@ -9,10 +9,12 @@ use App\Models\Jiri;
 use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class JiriController extends Controller
 {
+    use AuthorizesRequests;
+
     public function store(Request $request): RedirectResponse
     {
         $validated_data = $request->validate([
@@ -50,8 +52,9 @@ class JiriController extends Controller
 
     public function index()
     {
-        $jiris = Auth::user()->jiris;
+        //$jiris = Auth::user()->jiris;
 
+        $jiris = Jiri::all();
         return view('jiris.index', compact('jiris'));
     }
 
@@ -72,5 +75,12 @@ class JiriController extends Controller
         $contacts = Contact::all();
         $projects = Project::all();
         return view('jiris.edit', compact('jiri', 'contacts', 'projects'));
+    }
+
+    public function update(Jiri $jiri)
+    {
+        $this->authorize('update', $jiri);
+
+        return 'toto';
     }
 }

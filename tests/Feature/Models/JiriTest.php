@@ -23,6 +23,7 @@ it(
                 Contact::factory()->count(3),
                 ['role' => ContactRoles::Evaluators->value]
             )
+            ->for($user)
             ->create();
 
         //Assert
@@ -45,6 +46,7 @@ it(
             ->hasAttached(
                 Project::factory()->count(3),
             )
+            ->for($user)
             ->create();
 
         //Assert
@@ -68,6 +70,7 @@ it(
             ->hasAttached(
                 Project::factory()->count(3)
             )
+            ->for($user)
             ->create();
 
         $contact = $jiri->evaluated->first();

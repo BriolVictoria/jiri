@@ -4,6 +4,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\JiriController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
+echo storage_path();
 
 Route::get('/', function () {
     return view('welcome');
