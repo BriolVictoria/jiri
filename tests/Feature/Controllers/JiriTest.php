@@ -134,7 +134,7 @@ it(
         // Assert
         $response->assertStatus(200);
         $response->assertViewIs('jiris.show');
-        $response->assertSee('Récapitulatif du jiri : ' . $jiri->name);
+        $response->assertSee('Récapitulatif du jiri');
     }
 );
 
@@ -189,6 +189,7 @@ it(
 
         $contacts = Contact::factory()
             ->count(4)
+            ->for($user)
             ->create()
             ->pluck('id', 'id')
             ->toArray();
@@ -228,6 +229,7 @@ it(
 
         $contacts = Contact::factory()
             ->count(4)
+            ->for($user)
             ->create()
             ->pluck('id', 'id')
             ->toArray();

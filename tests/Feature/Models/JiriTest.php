@@ -14,13 +14,20 @@ it(
         $user = User::factory()->create();
         actingAs($user);
 
+        $contact1 = Contact::factory()
+            ->for($user)
+            ->count(7)
+            ->create();
+
+        $contact2 = Contact::factory()->for($user)->count(3);
+
         $jiri = Jiri::factory()
             ->hasAttached(
-                Contact::factory()->count(7),
+                $contact1,
                 ['role' => ContactRoles::Evaluated->value]
             )
             ->hasAttached(
-                Contact::factory()->count(3),
+                $contact2,
                 ['role' => ContactRoles::Evaluators->value]
             )
             ->for($user)
@@ -62,9 +69,11 @@ it(
         $user = User::factory()->create();
         actingAs($user);
 
+        $contact = Contact::factory()->for($user)->count(1);
+
         $jiri = Jiri::factory()
             ->hasAttached(
-                Contact::factory()->count(1),
+                $contact,
                 ['role' => ContactRoles::Evaluated->value],
             )
             ->hasAttached(
@@ -82,7 +91,7 @@ it(
         }
 
         //Assert
-       $this->assertDatabaseCount('implementations', 3);
+        $this->assertDatabaseCount('implementations', 3);
         expect($jiri->homeworks()->count())->toBe(3)
             ->and($contact->implementations->count())->toBe(3)
             ->and($contact->homeworks->count())->toBe(3);

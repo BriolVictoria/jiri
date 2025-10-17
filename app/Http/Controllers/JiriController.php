@@ -10,6 +10,7 @@ use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 
 class JiriController extends Controller
 {
@@ -25,8 +26,7 @@ class JiriController extends Controller
             'projects.*' => 'nullable',
         ]);
 
-
-        $jiri = Jiri::create(array_merge($validated_data, ['user_id' => \Auth::user()->id]));
+        $jiri = Auth::user()->jiris()->create($validated_data);
 
         if (!empty($validated_data['projects'])) {
             $jiri->projects()->attach($validated_data['projects']);

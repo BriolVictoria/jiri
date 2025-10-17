@@ -17,9 +17,10 @@ Route::resource('jiris', JiriController::class)->middleware('auth');
 /*Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
 Route::post('/contacts', [ContactController::class, 'store']);
 Route::get('/contacts/{contact}', [ContactController::class, 'show']);*/
-Route::resource('contacts', ContactController::class);
+Route::resource('contacts', ContactController::class)->middleware('auth');
 
 
-Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+/*Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
 Route::post('/projects', [ProjectController::class, 'store']);
-Route::get('/projects/{project}', [ProjectController::class, 'show']);
+Route::get('/projects/{project}', [ProjectController::class, 'show']);*/
+Route::resource('projects', ProjectController::class);

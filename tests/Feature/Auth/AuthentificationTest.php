@@ -84,8 +84,8 @@ it(
         //Act
         $response = $this->get(route('jiris.index'));
 
-        $response->assertSee($user->jiris->pluck('name')->toArray());
-        $response->assertDontSee($other_user->jiris->pluck('name')->toArray());
+        $response->assertSee($user->jiris()->pluck('name')->toArray());
+        $response->assertDontSee($other_user->jiris()->pluck('name'));
 
     }
 );
@@ -104,5 +104,19 @@ it(
         $response->assertStatus(200);
         $response->assertViewIs('jiris.edit');
         $response->assertSee('Modifiez le jiri');
+    }
+);
+
+it(
+    'verifies if a guest can‘t access to the contacts.index and the guest is redirect to the login page',
+    function () {
+        //Act
+        $response = $this->get(route('contacts.index'));
+
+        //Assert
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
+
+
     }
 );

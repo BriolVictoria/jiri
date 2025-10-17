@@ -32,7 +32,7 @@
             @error('description')
             <p class="error text-red-600 text-xs">{!! $message !!}</p>
             @enderror
-            <textarea name="description" id="description" cols="30" rows="5" {{--value="{{ old('name') }}"--}} class="border p-2 rounded-lg" placeholder="Jury des élèves de B2..."></textarea>
+            <input type="text" name="description" id="description" value="{{ old('description') }}" class="border p-2 rounded-lg">
         </div>
 
     </fieldset>

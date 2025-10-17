@@ -11,6 +11,7 @@
 <h1 class="font-bold text-3xl my-5 text-center">Modifiez le contact</h1>
 
 <form action="{!! route('contacts.update', $contact->id) !!}" method="post" class="max-w-1/2 mx-auto">
+    @method('PATCH')
     @csrf
     <p class="text-red-600 text-xs mb-3 text-center">{{ __('login.fields_are_required') }}</p>
     <div class="flex flex-col relative">

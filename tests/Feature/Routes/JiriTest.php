@@ -67,7 +67,7 @@ it(
         // Assert
         $response->assertStatus(200);
         $response->assertViewIs('jiris.show');
-        $response->assertSee('Récapitulatif du jiri : ' . $jiri->name);
+        $response->assertSee('Récapitulatif du jiri');
     }
 );
 

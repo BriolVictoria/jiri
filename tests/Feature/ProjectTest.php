@@ -15,7 +15,7 @@ it(
 
         // Assert
         $response->assertStatus(302);
-        $response->assertRedirect('projects');
+        $response->assertRedirect(route('projects.index'));
         \Pest\Laravel\assertDatabaseHas('projects', ['name' => 'Client']);
     }
 );

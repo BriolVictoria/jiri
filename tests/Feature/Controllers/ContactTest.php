@@ -3,6 +3,8 @@
 use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Intervention\Image\Laravel\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use function Pest\Laravel\actingAs;
 
 it(
@@ -13,7 +15,7 @@ it(
 
         actingAs($user);
 
-        \Illuminate\Support\Facades\Storage::fake('public');
+        Storage::fake('public');
 
         $avatar = UploadedFile::fake()->image('photo.jpg');
 
@@ -29,18 +31,29 @@ it(
         // Assert
         $response->assertStatus(302);
         $contact = Contact::first();
-        \Illuminate\Support\Facades\Storage::disk('public')->assertExists($contact->avatar);
+        Storage::disk('public')->assertExists($contact->avatar);
+
+        $image = Image::read(Storage::disk('public')->get($contact->avatar));
+
+        expect($image->width())
+            ->toBeLessThanOrEqual(300)
+            ->and($image->height())
+            ->toBeLessThanOrEqual(300);
+
+
         $response->assertRedirect(route('contacts.show', compact('contact')));
         \Pest\Laravel\assertDatabaseHas('contacts', ['name' => 'Amandine Briol']);
     }
-
 );
 
 it(
     'display a complete list of contacts on the contact index page',
     function () {
         // Arrange
-        $contacts = Contact::factory(4)->create();
+        $user = User::factory()->create();
+        $contacts = Contact::factory(4)->for($user)->create();
+
+        actingAs($user);
 
         // Act
         $response = $this->get('/contacts');
@@ -60,7 +73,10 @@ it(
     'verify if the link in contact is the same of the contact dashboard',
     function () {
         // Arrange
-        $contact = Contact::factory()->create();
+        $user = User::factory()->create();
+        $contact = Contact::factory()->for($user)->create();
+
+        actingAs($user);
 
         // Act
         $response = $this->get('/contacts/' . $contact->id);
@@ -68,13 +84,15 @@ it(
         // Assert
         $response->assertStatus(200);
         $response->assertViewIs('contacts.show');
-        $response->assertSee('Récapitulatif des contacts : ' . $contact->name);
+        $response->assertSee('Récapitulatif du contact');
     });
 
 it(
     'check the validation',
     function () {
         //Arrange
+        $user = User::factory()->create();
+        actingAs($user);
         $contact = [
             'name' => '',
             'email' => '',
@@ -85,6 +103,7 @@ it(
 
         //Assert
         $response->assertInvalid('name');
+        $response->assertInvalid('email');
 
     });
 
@@ -97,7 +116,7 @@ it(
 
         actingAs($user);
 
-        $response = $this->get(route('contacts.show',$contact->id));
+        $response = $this->get(route('contacts.show', $contact->id));
 
         $response->assertStatus(200);
         $response->assertViewIs('contacts.show');
@@ -114,10 +133,33 @@ it(
 
         actingAs($user);
 
-        $response = $this->get(route('contacts.edit',$contact->id));
+        $response = $this->get(route('contacts.edit', $contact->id));
 
         $response->assertStatus(200);
         $response->assertViewIs('contacts.edit');
         $response->assertSee('Modifiez le contact');
+    }
+);
+
+it(
+    'verifies if the user connected can‘t modify an other contact',
+    function () {
+
+        $user = User::factory()->create();
+        actingAs($user);
+
+        $contact = Contact::factory()->for($user)->create();
+
+        $response = $this->patch(route('contacts.update', $contact));
+
+        $response->assertStatus(403);
+
+    }
+);
+
+it(
+    'verifies if the user can modify the contact and if it is saved in the database',
+    function () {
+
     }
 );

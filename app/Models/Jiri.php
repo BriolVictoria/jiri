@@ -13,7 +13,7 @@ class Jiri extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'date', 'user_id'];
+    protected $fillable = ['name', 'date', 'description'];
 
     function contacts():BelongsToMany
     {
