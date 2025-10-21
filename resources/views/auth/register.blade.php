@@ -8,6 +8,7 @@
 </head>
 
 <body class="flex justify-center items-center min-h-screen">
+@include('layout.app')
 
 <section class=" shadow-2xl p-10 rounded-2xl">
     <svg class="m-auto" height="100px" width="100px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
