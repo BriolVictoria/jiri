@@ -1,82 +1,120 @@
 <!doctype html>
-<html lang="{!! App::getLocale(); !!} ">
+<html lang="{!! App::getLocale() !!}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
+    <title>Modifier le Jiri</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
 </head>
-<body>
-<h1 class="font-bold text-3xl my-5 text-center">{{ __('edit-view.modify_the_jiri') }}</h1>
+<body class="flex flex-col items-center bg-gray-50 min-h-screen p-6">
+@include('layout.app')
 
-<form action="{!! route('jiris.update', $jiri->id) !!}" method="post" class="max-w-1/2 mx-auto">
-    @method('PATCH')
+<h1 class="mt-10 text-3xl font-bold text-center text-gray-800">
+    {{ __('edit-view.modify_the_jiri') }}
+</h1>
+
+<form action="{!! route('jiris.update', $jiri->id) !!}" method="post" class="mt-8 w-full max-w-3xl bg-white shadow-lg rounded-2xl p-8 flex flex-col gap-6">
     @csrf
-    <p class="text-red-600 text-xs mb-3 text-center">{{ __('login.fields_are_required') }}</p>
-    <fieldset class="border-1 p-4  my-10 rounded-lg">
-        <legend class="text-2xl p-2">Informations général</legend>
-        <div class="flex flex-col relative">
-            <label class="font-bold" for="name">Nom <small class="text-red-600 ml-1">*</small></label>
+    @method('PATCH')
+
+    <p class="text-red-600 text-xs text-center">Les champs * sont obligatoires</p>
+
+    {{-- Informations générales --}}
+    <fieldset class="border border-gray-200 p-6 rounded-2xl flex flex-col gap-4">
+        <legend class="text-2xl font-semibold px-2">Informations générales</legend>
+
+        <div class="flex flex-col">
+            <label for="name" class="font-bold text-gray-700">Nom <span class="text-red-600">*</span></label>
+            <input type="text" name="name" id="name" value="{{ $jiri->name }}"
+                   placeholder="Design Web"
+                   class="mt-2 border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
             @error('name')
-            <p>{!! $message !!}</p>
+            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
             @enderror
-            <input type="text" name="name" id="name" value="{{ $jiri->name }}" class="border p-2 rounded-lg"
-                   placeholder="Design Web">
-        </div>
-        <div class="flex flex-col relative my-3">
-            <label class="font-bold" for="date">Date <small class="text-red-600 ml-1">*</small></label>
-            @error('date')
-            <p>{!! $message !!}</p>
-            @enderror
-            <input type="text" name="date" id="date" value="{{ $jiri->date }}" class="border p-2 rounded-lg">
-        </div>
-        <div class="flex flex-col relative">
-            <label class="font-bold" for="description">Description</label>
-            @error('description')
-            <p>{!! $message !!}</p>
-            @enderror
-            <textarea name="description" id="description" cols="30" rows="5" class="border p-2 rounded-lg"
-                      placeholder="Jury des élèves de B2...">{{ $jiri->description }}</textarea>
         </div>
 
+        <div class="flex flex-col">
+            <label for="date" class="font-bold text-gray-700">Date <span class="text-red-600">*</span></label>
+            <input type="date" name="date" id="date" value="{{ $jiri->date }}"
+                   class="mt-2 border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            @error('date')
+            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="flex flex-col">
+            <label for="description" class="font-bold text-gray-700">Description</label>
+            <textarea name="description" id="description" rows="4"
+                      class="mt-2 border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      placeholder="Jury des élèves de B2...">{{ $jiri->description }}</textarea>
+            @error('description')
+            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
     </fieldset>
 
-    <fieldset class="border-1 p-4  rounded-lg">
-        <legend class="text-2xl p-2">Contact</legend>
-        <div>
+    {{-- Contacts --}}
+    <fieldset class="border border-gray-200 p-6 rounded-2xl flex flex-col gap-3">
+        <legend class="text-2xl font-semibold px-2">Contacts</legend>
+        <div class="flex flex-col gap-2 mt-2">
             @foreach($contacts as $contact)
-                <div class="border-b-1 m-2 p-2">
-                    <input value="1" type="checkbox" name="contacts[1]" id="contact{!! $contact->id !!}">
-                    <label for="contact{!! $contact->id !!}">
-                        {{ $contact->name }}
-                    </label>
-                    <select name="contacts[1][role]" class="font-bold mx-5 border-1 rounded-xl p-1  my-1">
-                        <option value="evaluated" id="role2" class="m-1">Evalué</option>
-                        <option value="evaluator" id="role3">Evaluateur</option>
+                @php
+                    $attendance = \App\Models\Attendance::where('contact_id', $contact->id)
+                        ->where('jiri_id', $jiri->id)
+                        ->first();
+                @endphp
+                <div class="flex items-center justify-between border-b border-gray-100 py-2">
+                    <div class="flex items-center gap-2">
+                        <input class="contact" type="checkbox" value="{{ $contact->id }}"
+                               name="contacts[{{ $contact->id }}]" id="contact{{ $contact->id }}"
+                            {{ $attendance ? 'checked' : '' }}>
+                        <label for="contact{{ $contact->id }}" class="font-medium">{{ $contact->name }}</label>
+                    </div>
+                    <select id="role{{ $contact->id }}" name="contacts[{{ $contact->id }}][role]"
+                            class="border border-gray-300 rounded-xl p-2 disabled:opacity-50"
+                        {{ $attendance ? '' : 'disabled' }}>
+                        @foreach(\App\Enums\ContactRoles::cases() as $role)
+                            <option value="{{ $role->value }}" {{ $attendance && $attendance->role === $role->value ? 'selected' : '' }}>
+                                {{ $role->value }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
             @endforeach
-
         </div>
     </fieldset>
 
-    <fieldset class="border-1 p-4 my-10  rounded-lg">
-        <legend class="text-2xl p-2">Projets</legend>
-        @foreach($projects as $project)
-        <div>
-            <input value="1" type="checkbox" name="projects[1]" id="projet{!! $project->id !!}">
-            <label for="projet{!! $project->id !!}">
-                {{ $project->name }}
-            </label>
+    {{-- Projets --}}
+    <fieldset class="border border-gray-200 p-6 rounded-2xl flex flex-col gap-2">
+        <legend class="text-2xl font-semibold px-2">Projets</legend>
+        <div class="flex flex-col gap-2 mt-2">
+            @foreach($projects as $project)
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" value="1" name="projects[{{ $project->id }}]" id="projet{{ $project->id }}">
+                    <label for="projet{{ $project->id }}" class="font-medium">{{ $project->name }}</label>
+                </div>
+            @endforeach
         </div>
-        @endforeach
     </fieldset>
 
-    <button type="submit" class="w-1/1 mb-30 border p-2 rounded-lg hover:bg-blue-950 hover:text-white">Modifier le
-        jiri
+    {{-- Bouton --}}
+    <button type="submit"
+            class="mt-6 bg-indigo-600 text-white font-semibold py-3 rounded-2xl shadow-lg hover:bg-indigo-700 transition-colors duration-200">
+        Modifier le Jiri
     </button>
 </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const checkboxes = document.querySelectorAll('.contact');
+        checkboxes.forEach(checkbox => {
+            const id = checkbox.value;
+            const select = document.getElementById(`role${id}`);
+            select.disabled = !checkbox.checked;
+            checkbox.addEventListener('change', () => select.disabled = !checkbox.checked);
+        });
+    });
+</script>
 
 </body>
 </html>

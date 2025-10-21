@@ -7,12 +7,16 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
-<body class="flex justify-center items-center">
-<section>
-    <div class="flex mt-5 items-center justify-center">
-        <svg class="ml-2" height="50px" width="50px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
-             xmlns:xlink="http://www.w3.org/1999/xlink"
-             viewBox="0 0 512 512" xml:space="preserve">
+<body class="flex flex-col items-center">
+
+{{--Menu--}}
+@include('layout.app')
+
+{{-- SVG + Titre --}}
+<div class="flex flex-col items-center mt-10">
+    <svg class="ml-2" height="50px" width="50px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         viewBox="0 0 512 512" xml:space="preserve">
 
         <g>
             <path class="st0" d="M505.837,180.418L279.265,76.124c-7.349-3.385-15.177-5.093-23.265-5.093c-8.088,0-15.914,1.708-23.265,5.093
@@ -25,16 +29,47 @@
 		C278.145,344.44,267.25,346.831,256,346.831z"/>
         </g>
 </svg>
-        <h1 class="font-bold text-3xl ml-5">Listes des jiris</h1>
-    </div>
-    <ul class="mt-5 ml-10">
-        @foreach($jiris as $jiri)
-            <div class="shadow-2xl p-5 mb-5 w-96 rounded-2xl hover:scale-105 transition-transform duration-200 text-center">
-                <li class="mb-2"><a class="underline"
-                                     href="{{ route('jiris.show', $jiri->id) }}">{{ $jiri->name }}</a></li>
-            </div>
-        @endforeach
-    </ul>
-</section>
+
+    <h1 class="mt-4 text-4xl font-bold text-center text-gray-800">
+        Liste des jiris
+    </h1>
+</div>
+
+{{--Créer un nouveau--}}
+<div class="mt-6 mb-4">
+    <a href="{{ route('jiris.create') }}"
+       class="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition-colors duration-200">
+        Créer un nouveau jiri
+    </a>
+</div>
+
+
+{{--Début du tableau--}}
+
+<table class="mt-8 ml-10 min-w-[400px] border-separate border-spacing-0 rounded-2xl shadow-lg overflow-hidden">
+    <thead>
+    <tr class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold">
+        <th class="px-6 py-4 text-left border-b border-gray-200">Numéro</th>
+        <th class="px-6 py-4 text-left border-b border-gray-200">Nom du jiri</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($jiris as $jiri)
+        <tr class="hover:bg-indigo-50 transition-all duration-200 border-b border-gray-100">
+
+            <td class="px-6 py-4 font-medium text-gray-700">
+                {{ $loop->iteration }}
+            </td>
+            <td class="px-6 py-4">
+                <a class="text-indigo-600 hover:text-indigo-800 font-medium underline-offset-2 hover:underline"
+                   href="{{ route('jiris.show', $jiri->id) }}">{{ $jiri->name }}</a></td>
+        </tr>
+    @endforeach
+    </tbody>
+
+</table>
+
+
 </body>
 </html>
+

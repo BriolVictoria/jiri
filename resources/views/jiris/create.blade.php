@@ -3,72 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
+    <title>{!! __('headings.create_a_jiri') !!}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="p-6">
-<h1 class="font-bold text-4xl my-4 text-center">{!! __('headings.create_a_jiri') !!}</h1>
-<form action="{!! route('jiris.store') !!}" method="post" class="max-w-1/2 mx-auto">
+<body class="flex flex-col items-center bg-gray-50 min-h-screen p-6">
+@include('layout.app')
+
+<h1 class="mt-10 text-4xl font-bold text-center text-gray-800">
+    {!! __('headings.create_a_jiri') !!}
+</h1>
+
+<form action="{!! route('jiris.store') !!}" method="post" class="mt-8 w-full max-w-3xl bg-white shadow-lg rounded-2xl p-8 flex flex-col gap-6">
     @csrf
-    <p class="text-red-600 text-xs mb-3 text-center">{{ __('login.fields_are_required') }}</p>
-    <fieldset class="border-1 p-4  my-10 rounded-lg">
-        <legend class="text-2xl p-2">Informations général</legend>
-        <div class="flex flex-col relative">
-            <label for="name">Nom <small class="text-red-600 ml-1">*</small></label>
+
+    <p class="text-red-600 text-xs text-center">{{ __('login.fields_are_required') }}</p>
+
+    {{-- Informations générales --}}
+    <fieldset class="border border-gray-200 p-6 rounded-2xl">
+        <legend class="text-2xl font-semibold px-2">Informations générales</legend>
+
+        <div class="flex flex-col my-3">
+            <label for="name" class="font-bold text-gray-700">Nom <span class="text-red-600">*</span></label>
+            <input type="text" name="name" id="name" value="{{ old('name') }}"
+                   placeholder="Design Web"
+                   class="mt-2 border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
             @error('name')
-            <p class="error text-red-600 text-xs">{!! $message !!}</p>
+            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
             @enderror
-            <input type="text" name="name" id="name" value="{{ old('name') }}" class="border p-2 rounded-lg" placeholder="Design Web">
-        </div>
-        <div class="flex flex-col relative my-3">
-            <label for="date">Date <small class="text-red-600 ml-1">*</small></label>
-            @error('date')
-            <p class="error text-red-600 text-xs">{!! $message !!}</p>
-            @enderror
-            <input type="text" name="date" id="date" value="{{ old('name') }}" class="border p-2 rounded-lg">
-        </div>
-        <div class="flex flex-col relative">
-            <label for="description">Description</label>
-            @error('description')
-            <p class="error text-red-600 text-xs">{!! $message !!}</p>
-            @enderror
-            <input type="text" name="description" id="description" value="{{ old('description') }}" class="border p-2 rounded-lg">
         </div>
 
+        <div class="flex flex-col my-3">
+            <label for="date" class="font-bold text-gray-700">Date <span class="text-red-600">*</span></label>
+            <input type="date" name="date" id="date" value="{{ old('date') }}"
+                   class="mt-2 border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            @error('date')
+            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="flex flex-col my-3">
+            <label for="description" class="font-bold text-gray-700">Description</label>
+            <textarea name="description" id="description" rows="3"
+                      class="mt-2 border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      placeholder="Description du Jiri">{{ old('description') }}</textarea>
+            @error('description')
+            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
     </fieldset>
 
-    <fieldset class="border-1 p-4  rounded-lg">
-        <legend class="text-2xl p-2">Contact</legend>
-        <div>
+    {{-- Contacts --}}
+    <fieldset class="border border-gray-200 p-6 rounded-2xl">
+        <legend class="text-2xl font-semibold px-2">Contacts</legend>
+        <div class="flex flex-col gap-3 mt-3">
             @foreach($contacts as $contact)
-                <div class="border-b-1 m-2 p-2">
-                    <input value="1" type="checkbox" name="contacts[1]" id="contact{!! $contact->id !!}">
-                    <label for="contact{!! $contact->id !!}">
-                        {{ $contact->name }}
-                    </label>
-                    <select name="contacts[1][role]" class="font-bold mx-5 border-1 rounded-xl p-1  my-1">
-                        <option value="evaluated" id="role2" class="m-1">Evalué</option>
-                        <option value="evaluator" id="role3">Evaluateur</option>
+                <div class="flex items-center justify-between border-b border-gray-100 py-2">
+                    <div class="flex items-center gap-2">
+                        <input class="contact" value="{!! $contact->id !!}" type="checkbox"
+                               name="contacts[{!! $contact->id !!}]" id="contact{!! $contact->id !!}">
+                        <label for="contact{!! $contact->id !!}" class="font-medium">{{ $contact->name }}</label>
+                    </div>
+                    <select id="role{!! $contact->id !!}" name="contacts[{!! $contact->id !!}][role]"
+                            class="border border-gray-300 rounded-xl p-2 disabled:opacity-50"
+                            disabled>
+                        <option value="evaluated">Evalué</option>
+                        <option value="evaluator">Evaluateur</option>
                     </select>
                 </div>
             @endforeach
-
         </div>
     </fieldset>
 
-    <fieldset class="border-1 p-4 my-10  rounded-lg">
-        <legend class="text-2xl p-2">Projets</legend>
-        @foreach($projects as $project)
-            <div>
-                <input value="1" type="checkbox" name="projects[1]" id="projet{!! $project->id !!}">
-                <label for="projet{!! $project->id !!}">
-                    {{ $project->name }}
-                </label>
-            </div>
-        @endforeach
+    {{-- Projets --}}
+    <fieldset class="border border-gray-200 p-6 rounded-2xl">
+        <legend class="text-2xl font-semibold px-2">Projets</legend>
+        <div class="flex flex-col gap-2 mt-3">
+            @foreach($projects as $project)
+                <div class="flex items-center gap-2">
+                    <input value="1" type="checkbox" name="projects[{!! $project->id !!}]"
+                           id="projet{!! $project->id !!}">
+                    <label for="projet{!! $project->id !!}" class="font-medium">{{ $project->name }}</label>
+                </div>
+            @endforeach
+        </div>
     </fieldset>
 
-    <button type="submit" class="w-1/1 mb-30 border p-2 rounded-lg hover:bg-blue-950 hover:text-white">{!! __('labels-buttons.create_a_jiri') !!}</button>
+    {{-- Bouton de soumission --}}
+    <button type="submit"
+            class="mt-6 bg-indigo-600 text-white font-semibold py-3 rounded-2xl shadow-lg hover:bg-indigo-700 transition-colors duration-200">
+        {!! __('labels-buttons.create_a_jiri') !!}
+    </button>
 </form>
+
+{{-- Script pour activer/désactiver les selects --}}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const checkboxes = document.querySelectorAll('.contact');
+
+        checkboxes.forEach(checkbox => {
+            const id = checkbox.value;
+            const select = document.getElementById(role${id});
+
+            checkbox.checked ? select.disabled = false : select.disabled = true;
+
+            checkbox.addEventListener('change', () => {
+                checkbox.checked ? select.disabled = false : select.disabled = true;
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

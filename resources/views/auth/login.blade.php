@@ -6,6 +6,7 @@
     <title>Document</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+@include('layout.app')
 <body class="flex justify-center items-center min-h-screen">
 <section class=" shadow-2xl p-10 rounded-2xl">
 
