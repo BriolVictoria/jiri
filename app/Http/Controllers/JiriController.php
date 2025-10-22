@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ContactRoles;
+use App\Events\JiriCreatedEvent;
+use App\Mail\JiriCreatedMail;
 use App\Models\Contact;
 use App\Models\Homework;
 use App\Models\Jiri;
@@ -11,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class JiriController extends Controller
 {
@@ -46,6 +49,8 @@ class JiriController extends Controller
         }
 
 
+        event(new JiriCreatedEvent($jiri));
+        //Mail::to($request->user())->queue(new JiriCreatedMail($jiri));
 
         return redirect(route('jiris.index'));
     }
