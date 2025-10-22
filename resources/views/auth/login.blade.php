@@ -64,4 +64,6 @@
 </section>
 
 </body>
-</html>
+
+@component('components.footer')
+@endcomponent
