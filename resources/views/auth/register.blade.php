@@ -28,8 +28,10 @@
                 Mot de passe<small class="text-red-600 ml-1">*</small>
             @endcomponent
 
-
-
+            @component('components.form.fields.input_checkbox', ['class_div' => 'flex mt-5', 'class_input' => 'mr-2', 'field_name' => 'checkbox', 'class_label' => 'text-xs' ])
+                Se souvenir de moi
+                <a class="text-xs ml-3 text-blue-500" href="#">{{ __('login.forgotten_password') }}</a>
+            @endcomponent
 
             @component('components.form.buttons.button', ['class' => 'bg-blue-500 text-white p-2 rounded-sm mt-5 w-1/1 hover:bg-sky-700', 'text' => 'Identifiez-vous'])
             @endcomponent
