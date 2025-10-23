@@ -33,8 +33,11 @@
                 <a class="text-xs ml-3 text-blue-500" href="#">{{ __('login.forgotten_password') }}</a>
             @endcomponent
 
-            @component('components.form.buttons.button', ['class' => 'bg-blue-500 text-white p-2 rounded-sm mt-5 w-1/1 hover:bg-sky-700', 'text' => 'Créez un compte'])
-            @endcomponent
+                <div>
+                    @component('components.form.buttons.button', ['class' => 'bg-blue-500 text-white p-2 rounded-sm mt-5 w-1/1 hover:bg-sky-700', 'text' => 'Créez un compte'])
+                    @endcomponent
+                </div>
+
 
 
             @component('components.form.fields.link', ['text' => 'Pas encore de compte ? ', 'href' => route('login.store'),'text_link' => 'Se connecter'])

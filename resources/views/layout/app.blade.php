@@ -1,4 +1,4 @@
-<aside class="fixed top-0 left-0 h-screen pr-15 shadow-2xl flex flex-col justify-between rounded-2xl">
+<aside class="fixed top-0 left-0 bg-white h-screen pr-15 shadow-2xl flex flex-col justify-between rounded-2xl">
 
     <div class="p-6 border-b border-gray-200">
         <h1 class="text-xl font-bold text-blue-500">

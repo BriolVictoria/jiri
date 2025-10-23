@@ -28,8 +28,10 @@
             @endcomponent
 
 
-            @component('components.form.buttons.button', ['class' => 'bg-blue-500 text-white p-2 rounded-sm mt-5 w-1/1 hover:bg-sky-700', 'text' => 'Identifiez-vous'])
-            @endcomponent
+                <div>
+                    @component('components.form.buttons.button', ['class' => 'bg-blue-500 text-white p-2 rounded-sm mt-5 w-1/1 hover:bg-sky-700', 'text' => 'Se connecter'])
+                    @endcomponent
+                </div>
 
 
             @component('components.form.fields.link', ['text' => 'Pas encore de compte ? ', 'href' => route('register.store'),'text_link' => 'Créer un compte'])

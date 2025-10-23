@@ -1,13 +1,12 @@
-<!doctype html>
-<html lang="{!! App::getLocale() !!}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Modifier le Jiri</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
+{{--Composant pour le header--}}
+@component('components.head', ['title' => 'Modifiez le jiri'])
+@endcomponent
+
 <body class="flex flex-col items-center bg-gray-50 min-h-screen p-6">
+
+{{-- Menu --}}
 @include('layout.app')
+
 
 <h1 class="mt-10 text-3xl font-bold text-center text-gray-800">
     {{ __('edit-view.modify_the_jiri') }}
@@ -17,40 +16,29 @@
     @csrf
     @method('PATCH')
 
-    <p class="text-red-600 text-xs text-center">Les champs * sont obligatoires</p>
+    {{-- Message obligatoire --}}
+    <p class="text-red-600 text-xs text-center">{{ __('login.fields_are_required') }}</p>
 
     {{-- Informations générales --}}
     <fieldset class="border border-gray-200 p-6 rounded-2xl flex flex-col gap-4">
         <legend class="text-2xl font-semibold px-2">Informations générales</legend>
 
-        <div class="flex flex-col">
-            <label for="name" class="font-bold text-gray-700">Nom <span class="text-red-600">*</span></label>
-            <input type="text" name="name" id="name" value="{{ $jiri->name }}"
-                   placeholder="Design Web"
-                   class="mt-2 border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            @error('name')
-            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-            @enderror
-        </div>
+        {{-- Nom --}}
+        @component('components.form.fields.input', ['type' => 'name', 'value' => $jiri->name,'field_name' => 'name', 'placeholder' => 'Design Web', 'required' => 'required'])
+            Nom<small class="text-red-600 ml-1">*</small>
+        @endcomponent
 
-        <div class="flex flex-col">
-            <label for="date" class="font-bold text-gray-700">Date <span class="text-red-600">*</span></label>
-            <input type="date" name="date" id="date" value="{{ $jiri->date }}"
-                   class="mt-2 border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            @error('date')
-            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-            @enderror
-        </div>
+        {{-- Date --}}
+        @component('components.form.fields.input', ['type' => 'text', 'value' => $jiri->date,'field_name' => 'name'])
+            Date<small class="text-red-600 ml-1">*</small>
+        @endcomponent
 
-        <div class="flex flex-col">
-            <label for="description" class="font-bold text-gray-700">Description</label>
-            <textarea name="description" id="description" rows="4"
-                      class="mt-2 border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      placeholder="Jury des élèves de B2...">{{ $jiri->description }}</textarea>
-            @error('description')
-            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-            @enderror
-        </div>
+
+        {{-- Description --}}
+        @component('components.form.fields.textarea', ['field_name' => 'description', 'field_name' => $jiri->description])
+            Description<small class="text-red-600 ml-1">*</small>
+        @endcomponent
+
     </fieldset>
 
     {{-- Contacts --}}
@@ -89,32 +77,38 @@
         <legend class="text-2xl font-semibold px-2">Projets</legend>
         <div class="flex flex-col gap-2 mt-2">
             @foreach($projects as $project)
-                <div class="flex items-center gap-2">
-                    <input type="checkbox" value="1" name="projects[{{ $project->id }}]" id="projet{{ $project->id }}">
-                    <label for="projet{{ $project->id }}" class="font-medium">{{ $project->name }}</label>
-                </div>
+                @component('components.form.fields.input_checkbox', ['class_div' => 'flex items-center gap-2', 'field_name' => $project->id , 'id' => $project->name])
+                    {!! $project->name !!}
+                @endcomponent
             @endforeach
         </div>
     </fieldset>
 
     {{-- Bouton --}}
-    <button type="submit"
-            class="mt-6 bg-indigo-600 text-white font-semibold py-3 rounded-2xl shadow-lg hover:bg-indigo-700 transition-colors duration-200">
-        Modifier le Jiri
-    </button>
+    @component('components.form.buttons.button', ['class' => 'mt-6 bg-indigo-600 text-white font-semibold py-3 rounded-2xl shadow-lg hover:bg-indigo-700 transition-colors duration-200', 'text' => 'Modifiez le jiri'])
+    @endcomponent
 </form>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const checkboxes = document.querySelectorAll('.contact');
+
         checkboxes.forEach(checkbox => {
             const id = checkbox.value;
             const select = document.getElementById(`role${id}`);
-            select.disabled = !checkbox.checked;
-            checkbox.addEventListener('change', () => select.disabled = !checkbox.checked);
+
+            checkbox.checked ? select.disabled = false : select.disabled = true;
+
+            checkbox.addEventListener('change', () => {
+                checkbox.checked ? select.disabled = false : select.disabled = true;
+            });
         });
     });
 </script>
 
 </body>
-</html>
+
+{{--Composant pour le footer--}}
+@component('components.footer')
+@endcomponent
+
