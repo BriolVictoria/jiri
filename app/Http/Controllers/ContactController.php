@@ -2,35 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreContactRequest;
+use App\Jobs\ProcessUploadContactAvatar;
 use App\Models\Contact;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Laravel\Facades\Image;
 
 class ContactController extends Controller
 {
     use AuthorizesRequests;
 
-    public function store(Request $request)
+    public function store(StoreContactRequest $request)
     {
 
-        $validatedData = request()->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'avatar' => 'nullable|image'
-        ]);
+        $validatedData = $request->validated();
 
-        if ($request->hasFile('avatar')) {
-            $image = Image::read($validatedData['avatar'])
-                ->cover(300, 300)
-                ->toJpeg(80);
-            $file_name = 'contact_' . uniqid() . '_300x300.jpg';
-            $path = "contacts/$file_name";
+        if ($validatedData['avatar']) {
+            $new_original_file_name = uniqid() . '.' . config('contactavatars.image_type');
+            $full_path_to_original = Storage::putFileAs(
+                config('contactavatars.original_path'),
+                $validatedData['avatar'],
+                $new_original_file_name);
 
-            Storage::disk('public')->put($path, $image->toString());
+            if ($full_path_to_original) {
+                $validatedData['avatar'] = $new_original_file_name;
 
-            $validatedData['avatar'] = $path;
+                ProcessUploadContactAvatar::dispatch($full_path_to_original, $new_original_file_name);
+            } else {
+                $validatedData['avatar'] = '';
+            }
         }
 
         $contact = auth()->user()->contacts()->create($validatedData);
@@ -60,10 +60,25 @@ class ContactController extends Controller
         return view('contacts.edit', compact('contact'));
     }
 
-    public function update(Contact $contact)
+    public function update(Contact $contact, StoreContactRequest $request)
     {
-        $this->authorize('update', $contact);
+        //$this->authorize('update', $contact);
 
-        return 'toto';
+        $validatedData = $request->validated();
+
+        $contact->upsert(
+            [
+                [
+                    'id' => $contact->id,
+                    'user_id' => auth()->user()->id,
+                    'name' => $validatedData['name'],
+                    'email' => $validatedData['email'],
+                ],
+            ],
+            'id',
+            ['name', 'email'],
+        );
+
+        return redirect(route('contacts.show', $contact->id));
     }
 }

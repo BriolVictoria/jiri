@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\User;
 
 class ProjectController extends Controller
 {
     public function store()
     {
-
         $validatedData = request()->validate([
             'name' => 'required',
         ]);
@@ -16,6 +16,27 @@ class ProjectController extends Controller
         Project::create(request()->all());
 
         return redirect(route('projects.index'));
+    }
+
+    public function update(Project $project)
+    {
+        $validatedData = request()->validate([
+            'name' => 'required',
+        ]);
+
+        $project->upsert(
+            [
+                [
+                    'id'=> $project->id,
+                    'user_id' => auth()->user()->id,
+                    'name' => $validatedData['name'],
+                ],
+            ],
+            'id',
+            ['name'],
+        );
+
+        return redirect(route('projects.show', $project->id));
     }
 
     public function index()
@@ -28,5 +49,15 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         return view('projects.show', compact('project'));
+    }
+
+    public function edit(Project $project)
+    {
+        return view('projects.edit', compact('project'));
+    }
+
+    public function create()
+    {
+        return view('projects.create');
     }
 }
