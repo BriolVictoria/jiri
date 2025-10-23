@@ -6,6 +6,8 @@ use Illuminate\Http\UploadedFile;
 use Intervention\Image\Laravel\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use function Pest\Laravel\actingAs;
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
 
 it(
     'create a Contact and redirect to the contact index',
@@ -158,8 +160,30 @@ it(
 );
 
 it(
-    'verifies if the user can modify the contact and if it is saved in the database',
+    'verifies if a project is correctly modified in the database',
     function () {
+        $user = User::factory()->create();
+        actingAs($user);
 
+        $contact = Contact::factory()->for($user)->create();
+
+        $modify_data = [
+            'name' => 'ili',
+            'email' => 'i@l.be',
+        ];
+
+        $response = $this->patch(route('contacts.update', $contact->id), $modify_data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('contacts.show', $contact->id));
+
+        assertDatabaseMissing('contacts', [
+           'name' => $contact['name'],
+           'email' => $contact['email'],
+        ]);
+
+        assertDatabaseHas('contacts', [
+           'name' => $modify_data['name'],
+           'email' => $modify_data['email'],
+        ]);
     }
 );

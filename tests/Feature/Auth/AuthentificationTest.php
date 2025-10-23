@@ -120,3 +120,17 @@ it(
 
     }
 );
+
+it(
+    'verifies if a guest can‘t access to the project.index and the guest is redirect to the login page',
+    function () {
+        //Act
+        $response = $this->get(route('projects.index'));
+
+        //Assert
+        $response->assertStatus(302);
+        $response->assertRedirect(route('login'));
+
+
+    }
+);
