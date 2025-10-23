@@ -6,6 +6,7 @@ use App\Models\Contact;
 use App\Models\Jiri;
 use App\Models\Project;
 use App\Models\User;
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,8 @@ class DatabaseSeeder extends Seeder
             ->for($user)
             ->create();
 
-        Project::factory(10)->create();
+        Project::factory(10)
+            ->for($user)
+            ->create();
     }
 }
