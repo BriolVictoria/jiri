@@ -23,4 +23,4 @@ Route::resource('contacts', ContactController::class)->middleware('auth');
 /*Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
 Route::post('/projects', [ProjectController::class, 'store']);
 Route::get('/projects/{project}', [ProjectController::class, 'show']);*/
-Route::resource('projects', ProjectController::class);
+Route::resource('projects', ProjectController::class)->middleware('auth');
