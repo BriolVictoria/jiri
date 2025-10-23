@@ -23,4 +23,10 @@ class Project extends Model
     {
         return $this->hasOne(Homework::class);
     }
+
+    public function user():BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
