@@ -40,7 +40,7 @@ class JiriController extends Controller
                 $jiri->contacts()->attach($key, ['role' => $contact['role']]);
 
                 if ($contact['role'] === ContactRoles::Evaluated->value) {
-                    $homeworks = Homework::where('jiri_id' , '=', $jiri->id)->pluck('id')->toArray();
+                    $homeworks = Homework::where('jiri_id', '=', $jiri->id)->pluck('id')->toArray();
                     $correct_contact = Contact::where('contacts.id', '=', $key)->first();
 
                     $correct_contact->homeworks()->attach($homeworks);
@@ -48,9 +48,7 @@ class JiriController extends Controller
             }
         }
 
-
         event(new JiriCreatedEvent($jiri));
-        //Mail::to($request->user())->queue(new JiriCreatedMail($jiri));
 
         return redirect(route('jiris.index'));
     }
