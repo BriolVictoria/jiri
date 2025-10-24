@@ -1,5 +1,5 @@
 
-    <button class="{!! $class !!}" type="submit">
+    <button class="{!! $class ?? '' !!}" type="submit">
         {!! $text !!}
     </button>
 
