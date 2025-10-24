@@ -47,9 +47,17 @@ it(
 it(
     'sends the email using the configured transport layer',
     function () {
+        Event::fake('eloquent.created: App/');
         $user = User::factory()->create();
 
         $jiri = Jiri::factory()->for($user)->create();
+
+        try {
+            Mail::to($user)
+                ->send(new \App\Mail\JiriCreatedMail($jiri));
+        } catch (Exception $e) {
+            test()->fail($e ->getMessage());
+        }
 
         Mail::to($user->email)->send(new \App\Mail\JiriCreatedMail($jiri));
         $response = file_get_contents('http://localhost:8025/api/v1/messages');
