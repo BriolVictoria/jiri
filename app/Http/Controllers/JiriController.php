@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ContactRoles;
 use App\Events\JiriCreatedEvent;
-use App\Mail\JiriCreatedMail;
+use App\Http\Requests\StoreJiriRequest;
 use App\Models\Contact;
 use App\Models\Homework;
 use App\Models\Jiri;
@@ -13,7 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class JiriController extends Controller
 {
@@ -50,14 +50,20 @@ class JiriController extends Controller
 
         event(new JiriCreatedEvent($jiri));
 
-        return redirect(route('jiris.index'));
+        return redirect(route('jiris.show', compact('jiri')));
+
     }
 
     public function index()
     {
         //$jiris = Auth::user()->jiris;
 
-        $jiris = Jiri::all();
+        $jiris = Jiri::with(['attendances', 'projects'])->where('user_id', auth()->user()->id)->orderBy('name')->paginate(6);
+
+        foreach ($jiris as $jiri){
+            $jiri->name = Str::lower($jiri->name);
+        }
+
         return view('jiris.index', compact('jiris'));
     }
 
@@ -80,10 +86,70 @@ class JiriController extends Controller
         return view('jiris.edit', compact('jiri', 'contacts', 'projects'));
     }
 
-    public function update(Jiri $jiri)
+    public function update(StoreJiriRequest $request, Jiri $jiri): RedirectResponse
     {
-        $this->authorize('update', $jiri);
+        //$this->authorize('update', $jiri);
 
-        return 'toto';
+        /****** Validation des données ******/
+        $validated_data = $request->validated();
+
+        /****** Mise à jour des données du Jiri ******/
+        $jiri->upsert(
+            [
+                [
+                    'id' => $jiri->id,
+                    'user_id' => auth()->user()->id,
+                    'name' => $validated_data['name'],
+                    'date' => $validated_data['date'],
+                    'description' => $validated_data['description'],
+                ],
+            ],
+            'id',
+            ['name', 'date', 'description']);
+
+        /****** Récupération des anciens contacts pour mettre à jour les implémentations ******/
+        $old_contacts_ids = $jiri->contacts()->pluck('contact_id')->toArray();
+
+        /****** Mise à jour des homeworks ******/
+        if (!empty($validated_data['projects'])) {
+            $jiri->projects()->sync($validated_data['projects']);
+        } else {
+            $jiri->projects()->detach();
+        }
+
+        /****** Mise à jour des attendances ******/
+        if (!empty($validated_data['contacts'])) {
+            $jiri->contacts()->sync($validated_data['contacts']);
+        } else {
+            $jiri->contacts()->detach();
+        }
+
+        /****** Implementation : Suppression d'un contact du jiri ******/
+        $new_contacts_ids = array_keys($validated_data['contacts'] ?? []);
+        $contacts_to_remove = array_diff($old_contacts_ids, $new_contacts_ids);
+
+        if (!empty($contacts_to_remove)) {
+            foreach ($contacts_to_remove as $contact_to_remove) {
+                if ($contact = Contact::where('id', '=', $contact_to_remove)->first()) {
+                    $contact->homeworks()->detach();
+                }
+            }
+        }
+
+        /****** Implementation : Changement de rôle d'un contact ******/
+        if (!empty($validated_data['contacts'])) {
+            foreach ($validated_data['contacts'] as $id => $contact) {
+                $homeworks_id = $jiri->homeworks()->pluck('id');
+                $correct_contact = $jiri->contacts->where('id', '=', $id)->first();
+
+                if ($contact['role'] === ContactRoles::Evaluated->value) {
+                    $correct_contact->homeworks()->sync($homeworks_id);
+                } else {
+                    $correct_contact->homeworks()->detach();
+                }
+            }
+        }
+
+        return redirect(route('jiris.show', $jiri->id));
     }
 }

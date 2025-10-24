@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Jiri;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Psy\Util\Str;
 
 class ProjectController extends Controller
 {
@@ -13,9 +16,12 @@ class ProjectController extends Controller
             'name' => 'required',
         ]);
 
-        Project::create(request()->all());
+        $user = Auth::user();
 
-        return redirect(route('projects.index'));
+        $project = $user->projects()->create($validatedData);
+
+        return redirect(route('projects.show', compact('project')));
+
     }
 
     public function update(Project $project)
@@ -41,23 +47,27 @@ class ProjectController extends Controller
 
     public function index()
     {
-        $projects = Project::all();
+        $projects = request()->user()->projects()->orderBy('name')->paginate(6);
+
 
         return view('projects.index', compact('projects'));
     }
 
     public function show(Project $project)
     {
-        return view('projects.show', compact('project'));
+        $jiris = Jiri::all();
+        return view('projects.show', compact('project', 'jiris'));
     }
 
     public function edit(Project $project)
     {
-        return view('projects.edit', compact('project'));
+        $jiris = Jiri::all();
+        return view('projects.edit', compact('project', 'jiris'));
     }
 
     public function create()
     {
-        return view('projects.create');
+        $jiris = Jiri::all();
+        return view('projects.create', compact('jiris'));
     }
 }
