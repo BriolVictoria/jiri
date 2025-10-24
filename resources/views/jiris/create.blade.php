@@ -25,7 +25,7 @@
         <legend class="text-2xl font-semibold px-2">Informations générales</legend>
 
         {{-- Nom --}}
-        @component('components.form.fields.input', ['type' => 'name', 'field_name' => 'name', 'placeholder' => 'Design Web', 'required' => 'required'])
+        @component('components.form.fields.input', ['type' => 'text', 'field_name' => 'name', 'placeholder' => 'Design Web', 'required' => 'required'])
             Nom<small class="text-red-600 ml-1">*</small>
         @endcomponent
 
