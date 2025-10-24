@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreContactRequest;
 use App\Jobs\ProcessUploadContactAvatar;
 use App\Models\Contact;
+use App\Models\Jiri;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ContactController extends Controller
 {
@@ -40,24 +42,29 @@ class ContactController extends Controller
 
     public function index()
     {
-        $contacts = Contact::all();
+        $contacts = request()->user()->contacts()->orderBy('name')->paginate(6);
+        $contacts = Str::lower($contacts);
+
 
         return view('contacts.index', compact('contacts'));
     }
 
     public function show(Contact $contact)
     {
-        return view('contacts.show', compact('contact'));
+        $jiris = Jiri::all();
+        return view('contacts.show', compact('contact', 'jiris'));
     }
 
     public function create()
     {
-        return view('contacts.create');
+        $jiris = Jiri::all();
+        return view('contacts.create', compact('jiris'));
     }
 
     public function edit(Contact $contact)
     {
-        return view('contacts.edit', compact('contact'));
+        $jiris = Jiri::all();
+        return view('contacts.edit', compact('contact', 'jiris'));
     }
 
     public function update(Contact $contact, StoreContactRequest $request)
