@@ -14,6 +14,7 @@
 
 {{-- Formulaire --}}
 
+
 <form enctype="multipart/form-data" action="{!! route('jiris.store') !!}" method="post" class="mt-8 w-full max-w-3xl bg-white shadow-lg rounded-2xl p-8 flex flex-col gap-6">
     @csrf
 
@@ -30,13 +31,13 @@
         @endcomponent
 
         {{-- Date --}}
-        @component('components.form.fields.input', ['type' => 'text', 'field_name' => 'date', 'required' => 'required'])
+        @component('components.form.fields.input', ['type' => 'date', 'field_name' => 'date', 'required' => 'required'])
             Date<small class="text-red-600 ml-1">*</small>
         @endcomponent
 
         {{-- Description --}}
         @component('components.form.fields.textarea', ['field_name' => 'description'])
-            Description<small class="text-red-600 ml-1">*</small>
+            Description
         @endcomponent
         {{--Bien récupérer la value !!--}}
 
@@ -69,9 +70,14 @@
         <legend class="text-2xl font-semibold px-2">Projets</legend>
         <div class="flex flex-col gap-2 mt-3">
             @foreach($projects as $project)
-                @component('components.form.fields.input_checkbox', ['class_div' => 'flex items-center gap-2', 'field_name' => $project->id , 'id' => $project->name])
+                {{--@component('components.form.fields.input_checkbox', ['class_div' => 'flex items-center gap-2', 'field_name' => $project->id , 'id' => $project->name])
                 {!! $project->name !!}
-                @endcomponent
+                @endcomponent--}}
+                <div class="flex items-center gap-2">
+                    <input class="project" type="checkbox" value="{{ $project->id }}"
+                           name="projects[{{ $project->id }}]" id="project{{ $project->id }}">
+                    <label for="project{{ $project->id }}" class="font-medium">{{ $project->name }}</label>
+                </div>
 
             @endforeach
         </div>

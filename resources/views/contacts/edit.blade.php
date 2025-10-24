@@ -37,6 +37,29 @@
         Avatar
     @endcomponent
 
+    {{-- Jiri --}}
+    <fieldset class="border border-gray-200 p-6 rounded-2xl">
+        <legend class="text-2xl font-semibold px-2">Jiris</legend>
+        <div class="flex flex-col gap-2 mt-3">
+            @foreach($jiris as $jiri)
+                @php
+                    $attendances = \App\Models\Attendance::where('jiri_id', $jiri->id)
+                        ->where('contact_id', $contact->id)
+                        ->first();
+                @endphp
+                {{--@component('components.form.fields.input_checkbox', ['class_div' => 'flex items-center gap-2', 'field_name' => $project->id , 'id' => $project->name])
+                {!! $project->name !!}
+                @endcomponent--}}
+                <div class="flex items-center gap-2">
+                    <input class="contact" type="checkbox" value="{{ $jiri->id }}"
+                           name="contacts[{{ $jiri->id }}]" id="contact{{ $jiri->id }}"
+                        {{ $attendances ? 'checked' : '' }}>
+                    <label for="contact{{ $jiri->id }}" class="font-medium">{{ $jiri->name }}</label>
+                </div>
+
+            @endforeach
+        </div>
+    </fieldset>
 
     {{-- Bouton --}}
     @component('components.form.buttons.button', ['class' => 'mt-5 bg-indigo-600 text-white font-semibold py-3 rounded-2xl shadow-lg hover:bg-indigo-700 transition-colors duration-200', 'text' => 'Modifiez le contact'])

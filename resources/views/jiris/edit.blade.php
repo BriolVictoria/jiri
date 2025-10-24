@@ -24,19 +24,19 @@
         <legend class="text-2xl font-semibold px-2">Informations générales</legend>
 
         {{-- Nom --}}
-        @component('components.form.fields.input', ['type' => 'name', 'value' => $jiri->name,'field_name' => 'name', 'placeholder' => 'Design Web', 'required' => 'required'])
+        @component('components.form.fields.input', ['type' => 'text', 'value' => $jiri->name,'field_name' => 'name', 'placeholder' => 'Design Web', 'required' => 'required'])
             Nom<small class="text-red-600 ml-1">*</small>
         @endcomponent
 
         {{-- Date --}}
-        @component('components.form.fields.input', ['type' => 'text', 'value' => $jiri->date,'field_name' => 'name'])
+        @component('components.form.fields.input', ['type' => 'date', 'value' => $jiri->date,'field_name' => 'date'])
             Date<small class="text-red-600 ml-1">*</small>
         @endcomponent
 
 
         {{-- Description --}}
-        @component('components.form.fields.textarea', ['field_name' => 'description', 'field_name' => $jiri->description])
-            Description<small class="text-red-600 ml-1">*</small>
+        @component('components.form.fields.textarea', ['field_name' => 'description'])
+            Description
         @endcomponent
 
     </fieldset>
@@ -77,9 +77,20 @@
         <legend class="text-2xl font-semibold px-2">Projets</legend>
         <div class="flex flex-col gap-2 mt-2">
             @foreach($projects as $project)
-                @component('components.form.fields.input_checkbox', ['class_div' => 'flex items-center gap-2', 'field_name' => $project->id , 'id' => $project->name])
+                @php
+                    $homeworks = \App\Models\Homework::where('project_id', $project->id)
+                        ->where('jiri_id', $jiri->id)
+                        ->first();
+                @endphp
+                {{--@component('components.form.fields.input_checkbox', ['class_div' => 'flex items-center gap-2', 'field_name' => $project->id , 'id' => $project->name])
                     {!! $project->name !!}
-                @endcomponent
+                @endcomponent--}}
+            <div class="flex items-center gap-2">
+                <input class="project" type="checkbox" value="{{ $project->id }}"
+                       name="projects[{{ $project->id }}]" id="project{{ $project->id }}"
+                    {{ $homeworks ? 'checked' : '' }}>
+                <label for="project{{ $project->id }}" class="font-medium">{{ $project->name }}</label>
+            </div>
             @endforeach
         </div>
     </fieldset>

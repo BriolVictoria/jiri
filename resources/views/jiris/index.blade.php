@@ -30,7 +30,7 @@
 </x-link>
 
 {{--Tableau--}}
-<x-table.table :column_names="['Nom', 'Date', 'Evalués', 'Evaluateurs', 'Projets']">
+<x-table.table :column_names="['Nom', 'Date', 'Evalués', 'Evaluateurs', 'Projets', 'Action']">
     @foreach($jiris as $jiri)
         <tr class="hover:bg-indigo-50 transition-all duration-200 border-b border-gray-100">
 
@@ -54,9 +54,26 @@
                 {!! $jiri->homeworks()->count() !!}
             </td>
 
+            <td class="px-6 py-4 border-l border-b border-gray-200 text-red-500">
+                <form action="{!! route('jiris.destroy', $jiri->id)!!}" method="post">
+                    @method('DELETE')
+                    @csrf
+                    <x-form.buttons.button>
+                        <x-slot:class>
+                            {!! 'cursor-pointer' !!}
+                        </x-slot:class>
+                       <x-slot:text>
+                           Supprimer
+                       </x-slot:text>
+                    </x-form.buttons.button>
+
+                </form>
+            </td>
+
         </tr>
     @endforeach
 </x-table.table>
+{!! $jiris->links() !!}
 
 
 

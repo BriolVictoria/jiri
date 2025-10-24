@@ -29,14 +29,35 @@
 </x-link>
 
 {{--Tableau--}}
-<x-table.table :column_names="['Nom']">
+<x-table.table :column_names="['Nom', 'Action']">
     @foreach($projects as $project)
         <tr class="hover:bg-indigo-50 transition-all duration-200 border-b border-gray-100">
             <td class="px-6 py-4 border-l border-b border-gray-200">
                 <a class="text-indigo-600 hover:text-indigo-800 font-medium underline-offset-2 hover:underline" href="{{ route('projects.show', $project->id) }}">{{ $project->name }}</a></td>
+
+            <td class="px-6 py-4 border-l border-b border-gray-200 text-red-500">
+                <form action="{!! route('projects.destroy', $project->id)!!}" method="post">
+                    @method('DELETE')
+                    @csrf
+                    <x-form.buttons.button>
+                        <x-slot:class>
+                            {!! 'cursor-pointer' !!}
+                        </x-slot:class>
+                        <x-slot:text>
+                            Supprimer
+                        </x-slot:text>
+                    </x-form.buttons.button>
+
+                </form>
+            </td>
+
         </tr>
+
+
     @endforeach
+
 </x-table.table>
+{!! $projects->links() !!}
 
 </body>
 

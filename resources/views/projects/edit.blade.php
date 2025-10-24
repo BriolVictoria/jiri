@@ -23,6 +23,23 @@
         Nom<small class="text-red-600 ml-1">*</small>
     @endcomponent
 
+    {{-- Jiri --}}
+    <fieldset class="border border-gray-200 p-6 rounded-2xl">
+        <legend class="text-2xl font-semibold px-2">Jiris</legend>
+        <div class="flex flex-col gap-2 mt-3">
+            @foreach($jiris as $jiri)
+                {{--@component('components.form.fields.input_checkbox', ['class_div' => 'flex items-center gap-2', 'field_name' => $project->id , 'id' => $project->name])
+                {!! $project->name !!}
+                @endcomponent--}}
+                <div class="flex items-center gap-2">
+                    <input class="project" type="checkbox" value="{{ $jiri->id }}"
+                           name="projects[{{ $jiri->id }}]" {{ $jiri ? 'checked' : '' }} id="project{{ $jiri->id }}">
+                    <label for="project{{ $jiri->id }}" class="font-medium">{{ $jiri->name }}</label>
+                </div>
+
+            @endforeach
+        </div>
+    </fieldset>
 
     {{-- Bouton --}}
     @component('components.form.buttons.button', ['class' => 'mt-6 bg-indigo-600 text-white font-semibold py-3 rounded-2xl shadow-lg hover:bg-indigo-700 transition-colors duration-200', 'text' => 'Modifiez le projet'])

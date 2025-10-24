@@ -11,44 +11,95 @@
     Récapitulatif du jiri
 </h1>
 
-{{--Début du tableau--}}
+<section  class="mt-8  w-2/5 bg-white shadow-lg rounded-2xl p-8 flex flex-col gap-5">
 
-<table class="mt-8 w-full max-w-xl border-separate border-spacing-0 rounded-2xl shadow-lg overflow-hidden mx-auto">
-    <thead>
-    <tr class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold">
-        <th class="px-6 py-4 text-left border-b border-gray-200">Champs</th>
-        <th class="px-6 py-4 text-left border-b border-gray-200">Valeur</th>
-    </tr>
-    </thead>
+    <div class="flex">
+        <div class="px-6 py-4">
+            <x-show_div.show_div>
+                <x-slot:title>
+                    Nom
+                </x-slot:title>
+                <x-slot:text>
+                    {!! $jiri->name  !!}
+                </x-slot:text>
+            </x-show_div.show_div>
 
-    <tbody>
-    <tr class="hover:bg-indigo-50 transition-all duration-200 border-b border-gray-100">
-        <td class="px-6 py-4 font-medium text-gray-700">Nom</td>
-        <td class="px-6 py-4 text-indigo-600 hover:underline">{!! $jiri->name !!}</td>
-    </tr>
+            <x-show_div.show_div>
+                <x-slot:title>
+                    Date
+                </x-slot:title>
+                <x-slot:text>
+                    {!! $jiri->date  !!}
+                </x-slot:text>
+            </x-show_div.show_div>
 
-    <tr class="hover:bg-indigo-50 transition-all duration-200 border-b border-gray-100">
-        <td class="px-6 py-4 font-medium text-gray-700">Date</td>
-        <td class="px-6 py-4 text-indigo-600 hover:underline">{!! $jiri->date !!}</td>
-    </tr>
+            <div class="mb-5">
+                <x-show_div.show_div>
+                    <x-slot:title>
+                        Description
+                    </x-slot:title>
+                    <x-slot:text>
+                        {!! $jiri->description  !!}
+                    </x-slot:text>
+                </x-show_div.show_div>
+            </div>
+        </div>
 
-    <tr class="hover:bg-indigo-50 transition-all duration-200 border-b border-gray-100">
-        <td class="px-6 py-4 font-medium text-gray-700">Description</td>
-        <td class="px-6 py-4 text-indigo-600 hover:underline">{!! $jiri->description !!}</td>
-    </tr>
+        <div  class="px-6 py-4 ml-10">
+            <x-show_div.show_div>
+                <x-slot:title>
+                    Evalués
+                </x-slot:title>
+                <x-slot:text>
+                    {!! $jiri->evaluated()->count()  !!}
+                </x-slot:text>
+            </x-show_div.show_div>
 
-    <tr>
-        <td colspan="2" class="px-6 py-4 text-center">
-            <a href="{{ route('jiris.edit', $jiri->id)}}"
-               class="shadow-2xl w-96 p-5 underline rounded-2xl hover:scale-105 transition-transform duration-200 inline-block">
-                Modifiez le jiri
-            </a>
-        </td>
-    </tr>
-    </tbody>
+            <x-show_div.show_div>
+                <x-slot:title>
+                    Evaluateurs
+                </x-slot:title>
+                <x-slot:text>
+                    {!! $jiri->evaluators()->count()  !!}
+                </x-slot:text>
+            </x-show_div.show_div>
 
-</table>
+            <x-show_div.show_div>
+                <x-slot:title>
+                    Projets
+                </x-slot:title>
+                <x-slot:text>
+                    {!! $jiri->homeworks()->count()  !!}
+                </x-slot:text>
+            </x-show_div.show_div>
 
+        </div>
+    </div>
+
+    <x-link>
+        <x-slot:href>
+            {!! route('jiris.edit', $jiri->id) !!}
+        </x-slot:href>
+        <x-slot:class_link>
+            {!! 'bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition-colors duration-200' !!}
+        </x-slot:class_link>
+        Modifiez le jiri
+    </x-link>
+</section>
+
+<form action="{!! route('jiris.destroy', $jiri->id)!!}" method="post">
+    @method('DELETE')
+    @csrf
+    <x-form.buttons.button>
+        <x-slot:class>
+            {!! 'cursor-pointer text-white p-5 bg-red-700 mt-10 rounded-2xl' !!}
+        </x-slot:class>
+        <x-slot:text>
+            Supprimer
+        </x-slot:text>
+    </x-form.buttons.button>
+
+</form>
 
 </body>
 
