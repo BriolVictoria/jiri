@@ -16,24 +16,18 @@
 </div>
 
 {{--Créer un nouveau--}}
-<div class="mt-6 mb-4">
-    <a href="{{ route('contacts.create') }}"
-       class="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition-colors duration-200">
-        Créer un nouveau contact
-    </a>
-</div>
+<x-link>
+    <x-slot:href>
+        {!! route('contacts.create') !!}
+    </x-slot:href>
+    <x-slot:class_link>
+        {!! 'bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition-colors duration-200' !!}
+    </x-slot:class_link>
+    Créez un contact
+</x-link>
 
-{{--Début du tableau--}}
-
-<table class="mb-10 mt-8 ml-10 min-w-[400px] border-separate border-spacing-0 rounded-2xl shadow-lg overflow-hidden">
-    <thead>
-    <tr class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold">
-        <th class="px-6 py-4 text-left border-b border-gray-200">Nom du contact</th>
-        <th class="px-6 py-4 text-left border-b border-l border-gray-200">Adresse email</th>
-        <th class="px-6 py-4 text-left border-b border-l border-gray-200">Avatar</th>
-    </tr>
-    </thead>
-    <tbody>
+{{--Tableau--}}
+<x-table.table :column_names="['Nom', 'Adresse email', 'Avatar']">
     @foreach($contacts as $contact)
         <tr class="hover:bg-indigo-50 transition-all duration-200 border-b border-gray-100">
 
@@ -45,18 +39,22 @@
                 {{ $contact->email }}
             </td>
 
-            <td class="px-6 py-4 border-l border-b border-gray-200">
-                <img class="mt-2 max-w-[150px] rounded-xl text-indigo-600 hover:underline"
-                     src="{!! asset('storage/images/contacts/originals/'.$contact->avatar) !!}"
-                     alt="avatar de {{ $contact->name }}">
-            </td>
+            @if(isset($contact->avatar))
+                <td class="px-6 py-4 border-l border-b border-gray-200">
+                    <img class="mt-2 max-w-[150px] rounded-xl"
+                         src="{!! asset('storage/images/contacts/originals/'.$contact->avatar) !!}"
+                         alt="avatar de {{ $contact->name }}">
+                </td>
+            @else
+                <td class="px-6 py-4 border-l border-b border-gray-200">
+                   <p>Ne possède pas d'avatar</p>
+                </td>
+            @endif
+
         </tr>
     @endforeach
-    </tbody>
+</x-table.table>
 
-</table>
-
-</body>
 
 {{--Composant pour le footer--}}
 @component('components.footer')

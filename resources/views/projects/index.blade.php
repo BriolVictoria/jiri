@@ -18,31 +18,25 @@
 </div>
 
 {{--Créer un nouveau--}}
-<div class="mt-6 mb-4">
-    <a href="{{ route('projects.create') }}"
-       class="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition-colors duration-200">
-        Créer un nouveau projet
-    </a>
-</div>
+<x-link>
+    <x-slot:href>
+        {!! route('projects.create') !!}
+    </x-slot:href>
+    <x-slot:class_link>
+        {!! 'bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition-colors duration-200' !!}
+    </x-slot:class_link>
+    Créez un projet
+</x-link>
 
-
-{{--Début du tableau--}}
-<table class="mb-10 mt-8 ml-10 min-w-[400px] border-separate border-spacing-0 rounded-2xl shadow-lg overflow-hidden">
-    <thead>
-    <tr class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold">
-        <th class="px-6 py-4 text-left border-b border-gray-200">Nom du projet</th>
-    </tr>
-    </thead>
-    <tbody>
+{{--Tableau--}}
+<x-table.table :column_names="['Nom']">
     @foreach($projects as $project)
         <tr class="hover:bg-indigo-50 transition-all duration-200 border-b border-gray-100">
             <td class="px-6 py-4 border-l border-b border-gray-200">
                 <a class="text-indigo-600 hover:text-indigo-800 font-medium underline-offset-2 hover:underline" href="{{ route('projects.show', $project->id) }}">{{ $project->name }}</a></td>
         </tr>
     @endforeach
-    </tbody>
-</table>
-
+</x-table.table>
 
 </body>
 
